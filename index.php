@@ -25,6 +25,7 @@
 # You can use regexp, for example '/users/([A-Za-z0-9-\s\@]+)' => '/members/$0',
     Router::$routes = array(
     	'/' => '/index',     # default controller when "/" is requested
+        'user-signup' => 'users/signup',
     );
     
 # Match requested uri to any routes and instantiate controller
