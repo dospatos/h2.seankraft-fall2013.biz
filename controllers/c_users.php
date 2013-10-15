@@ -36,6 +36,67 @@ class users_controller extends base_controller {
 //echo "nice test";
     } # End of method
 
+    public function profileedit($id = null) {
+
+        if (isset($id)) {
+            $id = DB::instance(DB_NAME)->sanitize($id);
+        } else {
+            $id = $user->user_id;
+        }
+
+        $q = "SELECT user_id, first_name, last_name, email
+        FROM users
+        WHERE user_id  = " . $id;
+
+
+        $user = DB::instance(DB_NAME)->select_row($q);
+
+        $this->template->content = View::instance('v_users_profile');
+        $this->template->content->user = $user;
+        echo $this->template;
+    }
+
+    public function p_profileedit() {
+
+        # Sanitize the user entered data to prevent any funny-business (re: SQL Injection Attacks)
+        $_POST = DB::instance(DB_NAME)->sanitize($_POST);
+
+        # Search the db for this email and password
+        # Retrieve the token if it's available
+        $q = "SELECT token
+        FROM users
+        WHERE email = '".$_POST['email']."'
+        AND password = '".$_POST['password']."'";
+
+        $token = DB::instance(DB_NAME)->select_field($q);
+
+        # If we didn't get a token back, it means login failed
+        if(!$token) {
+
+            # Send them back to the login page
+            Router::redirect("/users/login/error");
+
+            # But if we did, login succeeded!
+        } else {
+
+            /*
+            Store this token in a cookie using setcookie()
+            Important Note: *Nothing* else can echo to the page before setcookie is called
+            Not even one single white space.
+            param 1 = name of the cookie
+            param 2 = the value of the cookie
+            param 3 = when to expire
+            param 4 = the path of the cooke (a single forward slash sets it for the entire domain)
+            */
+            setcookie("token", $token, strtotime('+1 year'), '/');
+
+            # Send them to the main page - or whever you want them to go
+            Router::redirect("/");
+
+        }
+
+    }
+
     public function login($error = NULL , $new_user = false) {
         # Setup view
         $this->template->content = View::instance('v_users_login');
