@@ -20,7 +20,7 @@
     <?php if($user): ?>
 
         <a href='/users/logout'>Logout</a>
-        <a href='/users/profileedit'>Profile</a>
+        <a href='/users/profileedit/<?php echo $user->user_id?>'>Profile</a>
 
         <!-- Menu options for users who are not logged in -->
     <?php else: ?>

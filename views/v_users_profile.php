@@ -8,7 +8,7 @@
  */
 ?>
 
-<form method='POST' action='/users/p_profileedit/<?php echo $user.user_id ?>'>
+<form method='POST' action='/users/p_profileedit/<?php echo $user["user_id"] ?>'>
 
     First Name<br>
     <input type='text' name='first_name' value='<?php echo $user["first_name"] ?>'>
