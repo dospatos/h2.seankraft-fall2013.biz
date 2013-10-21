@@ -8,6 +8,10 @@
  */
 ?>
 
+<?php if (isset($_GET["updated"])) { ?>
+    <div class="alerttext">Profile was updated!</div>
+<?php }?>
+
 <form method='POST' action='/users/p_profileedit/<?php echo $user["user_id"] ?>'>
 
     First Name<br>

@@ -7,10 +7,18 @@
  * To change this template use File | Settings | File Templates.
  */
 
-
 ?>
 
-<h1>Welcome to <?=APP_NAME?><?php if($user) echo ', '.$user->first_name; ?></h1>
+<div>Current Users (click name to follow):</div>
+<?php if($user) { //this block displays the options for the logged-inn user?>
+    <!--List of users to follow-->
+    <?php foreach($users_list AS $currentuser) {
+        if ($user->user_id != $currentuser["user_id"]) {
+    ?>
 
-<h2>Register</h2>
+            <div><a href="/users/profileview/<?php echo $currentuser['user_id'] ?>"><?php echo $currentuser['first_name'].' '.$currentuser['last_name'] ?></a></div>
+        <?php }} ?>
+<?php } else { //This block displays the public option ?>
+    <h2>To view other users and to post you must have an account!</h2>
+<?php } ?>
 

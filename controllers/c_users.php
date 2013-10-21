@@ -20,7 +20,16 @@ class users_controller extends base_controller {
 
 
         # Now set the <title> tag
-        //$this->template->title = "Users";
+        $this->template->title = "Users";
+
+
+        $q = "SELECT user_id, first_name, last_name, email
+        FROM users";
+
+
+        $users = DB::instance(DB_NAME)->select_rows($q);
+
+        $this->template->content->users_list = $users;
 
         # CSS/JS includes
         /*
@@ -38,11 +47,12 @@ class users_controller extends base_controller {
 
     public function profileedit($id = null) {
 
-        if (isset($id)) {
+        if ((isset($id)) && ($this->user->user_id == $id)) { //users can only edit their own profile
             $id = DB::instance(DB_NAME)->sanitize($id);
         } else {
-            $id = $user->user_id;
+            $id = $this->user->user_id;
         }
+
 
         $q = "SELECT user_id, first_name, last_name, email
         FROM users
@@ -54,6 +64,27 @@ class users_controller extends base_controller {
         $this->template->content = View::instance('v_users_profile');
         $this->template->content->user = $user;
         echo $this->template;
+
+    }
+
+    public function profileview($id = null) {
+
+        if ((isset($id))) { //users can only edit their own profile
+            $id = DB::instance(DB_NAME)->sanitize($id);
+        } else {
+            $id = $this->user->user_id;
+        }
+
+        $q = "SELECT user_id, first_name, last_name, email
+        FROM users
+        WHERE user_id  = " . $id;
+
+        $user = DB::instance(DB_NAME)->select_row($q);
+
+        $this->template->content = View::instance('v_profile_view');
+        $this->template->content->current_user = $user;
+        echo $this->template;
+
     }
 
     public function p_profileedit($id) {
@@ -71,8 +102,7 @@ class users_controller extends base_controller {
 
 
         } else {
-
-
+            Router::redirect("/users/profileedit/".$id."?updated=true");
         }
 
     }
