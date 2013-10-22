@@ -69,7 +69,7 @@ class users_controller extends base_controller {
     public function p_profileedit($id) {
 
         # Sanitize the user entered data to prevent any funny-business (re: SQL Injection Attacks)
-        $_POST = DB::instance(DB_NAME)->sanitize($_POST);
+        $_POST = siteutils::clean_html(DB::instance(DB_NAME)->sanitize($_POST));
 
         # Search the db for this email and password
         # Retrieve the token if it's available

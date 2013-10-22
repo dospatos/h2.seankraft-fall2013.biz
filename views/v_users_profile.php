@@ -14,7 +14,7 @@
 
 <form method='POST' action='/users/p_profileedit/<?php echo $current_user["user_id"] ?>'>
     <fieldset>
-        <legend>Edit Profile: <?php echo $user["first_name"] + $current_user{"last_name"} ?></legend>
+        <legend>Edit Profile: <?php echo $current_user["first_name"] + $current_user{"last_name"} ?></legend>
 
         <p>First Name<br>
             <input type='text' name='first_name' value='<?php echo $current_user["first_name"] ?>'>
