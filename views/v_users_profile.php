@@ -12,22 +12,34 @@
     <div class="alerttext">Profile was updated!</div>
 <?php }?>
 
-<form method='POST' action='/users/p_profileedit/<?php echo $user["user_id"] ?>'>
+<form method='POST' action='/users/p_profileedit/<?php echo $current_user["user_id"] ?>'>
+    <fieldset>
+        <legend>Edit Profile: <?php echo $user["first_name"] + $current_user{"last_name"} ?></legend>
 
-    First Name<br>
-    <input type='text' name='first_name' value='<?php echo $user["first_name"] ?>'>
-    <br><br>
+        <p>First Name<br>
+            <input type='text' name='first_name' value='<?php echo $current_user["first_name"] ?>'>
+        </p>
 
-    Last Name<br>
-    <input type='text' name='last_name' value='<?php echo $user["last_name"] ?>'>
-    <br><br>
+        <p>
+            Last Name<br>
+            <input type='text' name='last_name' value='<?php echo $current_user["last_name"]; ?>'>
+        </p>
+        <p>
+            Email<br>
+            <input type='text' name='email' value='<?php echo $current_user["email"]; ?>'>
+            <br>
+        </p>
+        <p>
+            Location<br/>
+            <input type='text' name='location' value='<?php echo $current_user["location"]; ?>'
+        </p>
+        <br>
+        <p>
+            Describe what's important about yourself...<br/>
+            <textarea cols='40' row='10' name='profile_text'><?php echo $current_user["profile_text"]; ?></textarea>
+        </p>
+        <br>
 
-    Email<br>
-    <input type='text' name='email' value='<?php echo $user["email"] ?>'>
-    <br><br>
-
-    <br><br>
-
-    <input type='submit' value='Update User'>
-
+        <input type='submit' value='Update Profile'>
+    </fieldset>
 </form>

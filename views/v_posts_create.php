@@ -11,8 +11,11 @@
 <h2>Create a New Post</h2>
 
 <p>
-    <form>
-        <input type="text" id="txtPost" name="txtPost"/>
+    <form action='/posts/p_postsave' method="post">
+        <p>
+            <textarea cols='40' rows='5' name='post_text'></textarea>
+        </p>
+
         <input type="submit" value="Post"/>
     </form>
 </p>

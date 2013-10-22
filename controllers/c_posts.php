@@ -58,8 +58,21 @@ class posts_controller extends base_controller {
         echo $this->template;
     }
 
-    public function edit ($post_id) {
-        echo "this is the edit";
+    public function p_postsave () {
+        # Sanitize the user entered data to prevent any funny-business (re: SQL Injection Attacks)
+        $_POST = DB::instance(DB_NAME)->sanitize($_POST);
+
+        # Save the post for the user
+        $_POST['user_id'] = $this->user->user_id;
+
+        $returned_id = DB::instance(DB_NAME)->insert('posts', $_POST);
+
+        if(!$returned_id) {
+
+        } else {
+            Router::redirect("/posts?updated=true");
+        }
+
     }
 
     public function delete ($post_id) {
