@@ -19,7 +19,7 @@
 
     <!-- Menu for users who are logged in -->
     <?php if($user): ?>
-
+        <a href='/posts'>Posts</a> |
         <a href='/users/logout'>Logout</a> |
         <a href='/users/profileedit/<?php echo $user->user_id?>'>Profile</a>
 

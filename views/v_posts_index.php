@@ -9,6 +9,10 @@
 ?>
 <h2>Posts</h2>
 
+<?php if (isset($_GET["updated"])) { ?>
+    <div class="alerttext">Post was saved!</div>
+<?php }?>
+
 <p>
     <a href="posts/create">Create New Post</a>
 </p>

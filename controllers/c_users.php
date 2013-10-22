@@ -54,39 +54,18 @@ class users_controller extends base_controller {
         }
 
 
-        $q = "SELECT user_id, first_name, last_name, email
+        $q = "SELECT user_id, first_name, last_name, email, location, profile_text
         FROM users
         WHERE user_id  = " . $id;
 
 
-        $user = DB::instance(DB_NAME)->select_row($q);
+        $current_user = DB::instance(DB_NAME)->select_row($q);
 
         $this->template->content = View::instance('v_users_profile');
-        $this->template->content->user = $user;
+        $this->template->content->current_user = $current_user;
         echo $this->template;
 
     }
-
-    public function profileview($id = null) {
-
-        if ((isset($id))) { //users can only edit their own profile
-            $id = DB::instance(DB_NAME)->sanitize($id);
-        } else {
-            $id = $this->user->user_id;
-        }
-
-        $q = "SELECT user_id, first_name, last_name, email
-        FROM users
-        WHERE user_id  = " . $id;
-
-        $user = DB::instance(DB_NAME)->select_row($q);
-
-        $this->template->content = View::instance('v_profile_view');
-        $this->template->content->current_user = $user;
-        echo $this->template;
-
-    }
-
     public function p_profileedit($id) {
 
         # Sanitize the user entered data to prevent any funny-business (re: SQL Injection Attacks)
@@ -104,6 +83,26 @@ class users_controller extends base_controller {
         } else {
             Router::redirect("/users/profileedit/".$id."?updated=true");
         }
+
+    }
+
+    public function profileview($id = null) {
+
+        if ((isset($id))) { //users can only edit their own profile
+            $id = DB::instance(DB_NAME)->sanitize($id);
+        } else {
+            $id = $this->user->user_id;
+        }
+
+        $q = "SELECT user_id, first_name, last_name, email, location, profile_text
+        FROM users
+        WHERE user_id  = " . $id;
+
+        $user = DB::instance(DB_NAME)->select_row($q);
+
+        $this->template->content = View::instance('v_profile_view');
+        $this->template->content->current_user = $user;
+        echo $this->template;
 
     }
 
