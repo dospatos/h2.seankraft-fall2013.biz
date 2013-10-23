@@ -12,7 +12,7 @@
     <div class="alerttext">Profile was updated!</div>
 <?php }?>
 
-<form method='POST' action='/users/p_profileedit/<?php echo $current_user["user_id"] ?>'>
+<form method='POST' action='/users/p_profileedit/<?php echo $current_user["user_id"] ?>' enctype="multipart/form-data">
     <fieldset>
         <legend>Edit Profile: <?php echo $current_user["first_name"] + $current_user{"last_name"} ?></legend>
 
@@ -37,6 +37,11 @@
         <p>
             Describe what's important about yourself...<br/>
             <textarea cols='40' row='10' name='profile_text'><?php echo $current_user["profile_text"]; ?></textarea>
+        </p>
+        <br/>
+        <p>
+            Choose a profile image
+            <input name="profile_pic" accept="image/jpeg" type="file">
         </p>
         <br>
 

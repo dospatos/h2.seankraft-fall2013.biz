@@ -68,6 +68,20 @@ class users_controller extends base_controller {
     }
     public function p_profileedit($id) {
 
+        //see if there is an image to update
+        if (isset($_FILES['profile_pic']) && $_FILES['profile_pic']['size'] > 0) {
+
+            // Temporary file name stored on the server
+            $tmpName = $_FILES['profile_pic']['tmp_name'];
+
+            // Read the file
+            $fp = fopen($tmpName, 'r');
+            $img_data = fread($fp, filesize($tmpName));
+            $img_data = addslashes($img_data);
+            fclose($fp);
+            //$_POST["profile_pic"] = $img_data;
+        }
+
         # Sanitize the user entered data to prevent any funny-business (re: SQL Injection Attacks)
         $_POST = siteutils::clean_html(DB::instance(DB_NAME)->sanitize($_POST));
 
