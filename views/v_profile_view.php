@@ -16,6 +16,7 @@
         <p>Email: <?php echo $current_user["email"]; ?></p>
         <p>Location: <?php echo $current_user["location"]; ?></p>
         <p>Description: <?php echo $current_user["profile_text"]; ?></p>
+        <p>Profile picture: <img src='/imageview.php?ID=<?php echo $current_user["user_id"] ?>' style='height:100px;width:100px' alt='profile picture'/></p>
     </fieldset>
 
 

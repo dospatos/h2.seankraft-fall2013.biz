@@ -42,6 +42,7 @@
         <p>
             Choose a profile image
             <input name="profile_pic" accept="image/jpeg" type="file">
+        <p>Current Profile picture: <img src='/imageview.php?ID=<?php echo $current_user["user_id"] ?>' style='height:100px;width:100px' alt='profile picture'/></p>
         </p>
         <br>
 

@@ -42,7 +42,7 @@ class users_controller extends base_controller {
 
         # Render the view
         echo $this->template;
-//echo "nice test";
+
     } # End of method
 
     public function profileedit($id = null) {
@@ -53,13 +53,7 @@ class users_controller extends base_controller {
             $id = $this->user->user_id;
         }
 
-
-        $q = "SELECT user_id, first_name, last_name, email, location, profile_text
-        FROM users
-        WHERE user_id  = " . $id;
-
-
-        $current_user = DB::instance(DB_NAME)->select_row($q);
+        $current_user = siteutils::getuserprofile($id);
 
         $this->template->content = View::instance('v_users_profile');
         $this->template->content->current_user = $current_user;
@@ -69,53 +63,71 @@ class users_controller extends base_controller {
     public function p_profileedit($id) {
 
         //see if there is an image to update
+        $img_data = null;
         if (isset($_FILES['profile_pic']) && $_FILES['profile_pic']['size'] > 0) {
+
+            $upload = file_get_contents($_FILES["profile_pic"]["tmp_name"]);
 
             // Temporary file name stored on the server
             $tmpName = $_FILES['profile_pic']['tmp_name'];
+            //move_uploaded_file($tmpName, "c:\\test.jpg");
 
             // Read the file
             $fp = fopen($tmpName, 'r');
             $img_data = fread($fp, filesize($tmpName));
+
             $img_data = addslashes($img_data);
             fclose($fp);
-            //$_POST["profile_pic"] = $img_data;
+
         }
 
         # Sanitize the user entered data to prevent any funny-business (re: SQL Injection Attacks)
         $_POST = siteutils::clean_html(DB::instance(DB_NAME)->sanitize($_POST));
 
+        $q = "UPDATE users SET
+                first_name = '".$_POST["first_name"]."',
+                last_name = '".$_POST["last_name"]."',
+                email = '".$_POST["email"]."',
+                location = '".$_POST["location"]."',
+                profile_text = '".$_POST["profile_text"]."',
+                profile_pic = '".$img_data."',
+                modified = '".Time::now()."'
+                WHERE user_id = ".$id.";";
+
         # Search the db for this email and password
         # Retrieve the token if it's available
         $_POST['modified'] = Time::now();
 
-        $returned_id = DB::instance(DB_NAME)->update('users', $_POST, 'where user_id ='.$id);
+        echo $q;
 
+        DB::instance(DB_NAME)->query($q);
+
+        //$returned_id = DB::instance(DB_NAME)->update('users', $_POST, 'where user_id ='.$id);
+
+        Router::redirect("/users/profileedit/".$id."?updated=true");
+        /*
         if(!$returned_id) {
 
 
         } else {
             Router::redirect("/users/profileedit/".$id."?updated=true");
         }
+        */
 
     }
 
     public function profileview($id = null) {
 
-        if ((isset($id))) { //users can only edit their own profile
+        if ((isset($id))) { //if ID is null show the user their own profile
             $id = DB::instance(DB_NAME)->sanitize($id);
         } else {
             $id = $this->user->user_id;
         }
 
-        $q = "SELECT user_id, first_name, last_name, email, location, profile_text
-        FROM users
-        WHERE user_id  = " . $id;
-
-        $user = DB::instance(DB_NAME)->select_row($q);
+        $current_user = siteutils::getuserprofile($id);
 
         $this->template->content = View::instance('v_profile_view');
-        $this->template->content->current_user = $user;
+        $this->template->content->current_user = $current_user;
         echo $this->template;
 
     }

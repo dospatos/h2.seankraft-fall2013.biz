@@ -19,7 +19,7 @@ CREATE TABLE users (
   email VARCHAR(255) NULL,
   profile_text VARCHAR(255) NULL,
   location VARCHAR(255) NULL,
-  profile_pic BLOB NULL,
+  profile_pic LONGBLOB NULL,
   PRIMARY KEY(user_id)
 );
 
