@@ -13,6 +13,9 @@ class users_controller extends base_controller {
     Accessed via http://localhost/index/index/
     -------------------------------------------------------------------------------------------------*/
     public function index() {
+        print("<pre>");
+        print_r($this->user);
+        print("</pre>");
 
         # Any method that loads a view will commonly start with this
         # First, set the content of the template with a view file
@@ -165,18 +168,10 @@ class users_controller extends base_controller {
             # Send them back to the login page
             Router::redirect("/users/login/error");
 
-            # But if we did, login succeeded!
-        } else {
 
-            /*
-            Store this token in a cookie using setcookie()
-            Important Note: *Nothing* else can echo to the page before setcookie is called
-            Not even one single white space.
-            param 1 = name of the cookie
-            param 2 = the value of the cookie
-            param 3 = when to expire
-            param 4 = the path of the cooke (a single forward slash sets it for the entire domain)
-            */
+        } else {# But if we did, login succeeded!
+
+            //Store this token in a cookie using setcookie()
             setcookie("token", $token, strtotime('+1 year'), '/');
 
             # Send them to the main page - or whever you want them to go
@@ -205,14 +200,24 @@ class users_controller extends base_controller {
         $_POST['password'] = sha1(PASSWORD_SALT.$_POST['password']);
 
         # Create an encrypted token via their email address and a random string
-        $_POST['token'] = sha1(TOKEN_SALT.$_POST['email'].Utils::generate_random_string());
+        $token = sha1(TOKEN_SALT.$_POST['email'].Utils::generate_random_string());
+        $_POST['token'] = $token;
 
         # Insert this user into the database
         $user_id = DB::instance(DB_NAME)->insert('users', $_POST);
+        //Store this token in a cookie now so that they appear as logged in, also so we can create the user to create the avatar
+        setcookie("token", $token, strtotime('+1 year'), '/');
+        $newuser = new User();
+        $newuser->authenticate();
+        print("<pre>");
+        print_r($newuser);
+        print("</pre>");
+
+        $newuser->create_initial_avatar($user_id);
 
         # For now, just confirm they've signed up -
         # You should eventually make a proper View for this
-        Router::redirect("/users/login?new_user=".$_POST['email']);
+        Router::redirect("/users/");
     }
 
     public function logout() {

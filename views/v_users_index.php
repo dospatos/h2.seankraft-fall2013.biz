@@ -17,7 +17,7 @@
     ?>
 
             <div>
-                <img src='/imageview.php?ID=<?php echo $currentuser["user_id"] ?>' style='height:50px;width:50px' alt='profile picture'/>
+                <img src='/uploads/avatars/<?php echo $currentuser["user_id"] ?>_200_200.png' style='height:50px;width:50px' alt='profile picture'/>
                 <a href="/users/profileview/<?php echo $currentuser['user_id'] ?>"><?php echo $currentuser['first_name'].' '.$currentuser['last_name'] ?></a></div>
         <?php }} ?>
 <?php } else { //This block displays the public option ?>

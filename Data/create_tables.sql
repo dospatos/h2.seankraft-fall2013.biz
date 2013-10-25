@@ -2,6 +2,8 @@ CREATE TABLE posts (
   post_id INT NOT NULL AUTO_INCREMENT,
   user_id INT NOT NULL,
   post_text VARCHAR(160) NULL,
+  created INT NULL,
+  modified INT NULL,
   PRIMARY KEY(post_id, user_id),
   INDEX posts_FKIndex1(user_id)
 );
@@ -19,7 +21,7 @@ CREATE TABLE users (
   email VARCHAR(255) NULL,
   profile_text VARCHAR(255) NULL,
   location VARCHAR(255) NULL,
-  profile_pic LONGBLOB NULL,
+  avatar VARCHAR(255) NULL,
   PRIMARY KEY(user_id)
 );
 
