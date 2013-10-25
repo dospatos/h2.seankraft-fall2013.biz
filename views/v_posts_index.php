@@ -17,4 +17,7 @@
     <a href="posts/create">Create New Post</a>
 </p>
 
-Put a list of posts here!
+<p>Your most recent posts</p>
+<?php foreach($posts_list AS $currentpost) { ?>
+        <div class='postframe'><?php echo $currentpost['post_text'] ?></div>
+<?php } ?>

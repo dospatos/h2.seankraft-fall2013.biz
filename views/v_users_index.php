@@ -16,7 +16,9 @@
         if ($user->user_id != $currentuser["user_id"]) {
     ?>
 
-            <div><a href="/users/profileview/<?php echo $currentuser['user_id'] ?>"><?php echo $currentuser['first_name'].' '.$currentuser['last_name'] ?></a></div>
+            <div>
+                <img src='/imageview.php?ID=<?php echo $currentuser["user_id"] ?>' style='height:50px;width:50px' alt='profile picture'/>
+                <a href="/users/profileview/<?php echo $currentuser['user_id'] ?>"><?php echo $currentuser['first_name'].' '.$currentuser['last_name'] ?></a></div>
         <?php }} ?>
 <?php } else { //This block displays the public option ?>
     <h2>To view other users and to post you must have an account!</h2>

@@ -19,6 +19,14 @@ class posts_controller extends base_controller {
         # First, set the content of the template with a view file
         $this->template->content = View::instance('v_posts_index');
 
+        $q = "SELECT  post_id, post_text, user_id
+        FROM posts WHERE user_id=".$this->user->user_id." ORDER BY post_id DESC";
+
+
+        $posts = DB::instance(DB_NAME)->select_rows($q);
+
+        $this->template->content->posts_list = $posts;
+
         # Now set the <title> tag
         $this->template->title = "Posts";
 

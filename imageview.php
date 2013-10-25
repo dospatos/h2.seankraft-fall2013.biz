@@ -14,7 +14,10 @@ $data = mysql_query("SELECT profile_pic from users where user_id = ".$_GET["ID"]
 or die(mysql_error());
 while($info = mysql_fetch_array( $data ))
 {
-    Print $info['profile_pic'];
+    $picdata = $info['profile_pic'];
+    if ($picdata != null) {
+        echo $picdata;
+    } else {echo "This is shit";}
 }
 
 
