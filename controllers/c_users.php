@@ -13,9 +13,6 @@ class users_controller extends base_controller {
     Accessed via http://localhost/index/index/
     -------------------------------------------------------------------------------------------------*/
     public function index() {
-        print("<pre>");
-        print_r($this->user);
-        print("</pre>");
 
         # Any method that loads a view will commonly start with this
         # First, set the content of the template with a view file
@@ -25,14 +22,15 @@ class users_controller extends base_controller {
         # Now set the <title> tag
         $this->template->title = "Users";
 
+        //if a user is active get a list of all the users
+        if (isset($this->user)) {
+            $q = "SELECT U.user_id, U.first_name, U.last_name, U.email, U.avatar, UF.user_id AS following_user_id
+            FROM users U LEFT JOIN users_following UF ON UF.user_id = ".$this->user->user_id;
 
-        $q = "SELECT user_id, first_name, last_name, email
-        FROM users";
+            $users = DB::instance(DB_NAME)->select_rows($q);
+            $this->template->content->users_list = $users;
+        }
 
-
-        $users = DB::instance(DB_NAME)->select_rows($q);
-
-        $this->template->content->users_list = $users;
 
         # CSS/JS includes
         /*
@@ -56,66 +54,60 @@ class users_controller extends base_controller {
             $id = $this->user->user_id;
         }
 
-        $current_user = siteutils::getuserprofile($id);
+        $currentuser = siteutils::getuserprofile($id);
 
         $this->template->content = View::instance('v_users_profile');
-        $this->template->content->current_user = $current_user;
+        $this->template->content->currentuser = $currentuser;
         echo $this->template;
 
     }
+    /*
+     Do the update for the profile
+        1. users can only edit their own profile
+     */
     public function p_profileedit($id) {
 
         //see if there is an image to update
-        $img_data = null;
+        $avatar_file_name = null;
         if (isset($_FILES['profile_pic']) && $_FILES['profile_pic']['size'] > 0) {
-
-            $upload = file_get_contents($_FILES["profile_pic"]["tmp_name"]);
-
-            // Temporary file name stored on the server
-            $tmpName = $_FILES['profile_pic']['tmp_name'];
-            //move_uploaded_file($tmpName, "c:\\test.jpg");
-
-            // Read the file
-            $fp = fopen($tmpName, 'r');
-            $img_data = fread($fp, filesize($tmpName));
-
-            $img_data = addslashes($img_data);
-            fclose($fp);
-
+            //use the upload library to save the file and resize it
+            $upload_dir = "/uploads/avatars/";
+            $avatar_file_name = Upload::upload($_FILES, $upload_dir, array("jpg", "jpeg", "gif", "png"), $id);
+            if ($avatar_file_name) {
+                $img = new Image();
+                $img->open_image($avatar_file_name);
+                $img->resize(600, 600, "crop");
+                $img->save_image($avatar_file_name);
+                $img->resize(200, 200, "auto");//no need to crop
+                $file_parts  = pathinfo($avatar_file_name);
+                $thumbnail_file = getcwd().$upload_dir.$id. "_200_200." . $file_parts['extension'];
+                $img->save_image($thumbnail_file);
+                $_POST["avatar"] = $avatar_file_name;
+            }
         }
 
         # Sanitize the user entered data to prevent any funny-business (re: SQL Injection Attacks)
         $_POST = siteutils::clean_html(DB::instance(DB_NAME)->sanitize($_POST));
 
-        $q = "UPDATE users SET
-                first_name = '".$_POST["first_name"]."',
-                last_name = '".$_POST["last_name"]."',
-                email = '".$_POST["email"]."',
-                location = '".$_POST["location"]."',
-                profile_text = '".$_POST["profile_text"]."',
-                profile_pic = '".$img_data."',
-                modified = '".Time::now()."'
-                WHERE user_id = ".$id.";";
-
-        # Search the db for this email and password
-        # Retrieve the token if it's available
+        # update the database
         $_POST['modified'] = Time::now();
+        $returned_id = DB::instance(DB_NAME)->update('users', $_POST, 'where user_id ='.$id);
 
-        echo $q;
-
-        DB::instance(DB_NAME)->query($q);
-
-        //$returned_id = DB::instance(DB_NAME)->update('users', $_POST, 'where user_id ='.$id);
-
-        Router::redirect("/users/profileedit/".$id."?updated=true");
-        /*
-        if(!$returned_id) {
-
-
-        } else {
+        if ($returned_id) {
             Router::redirect("/users/profileedit/".$id."?updated=true");
-        }
-        */
+        } else {}
+
+    }
+
+    public function p_profilefollow($id) {
+        //the logged in user should follow the user of $id
+
+        # update the database
+        $users = Array("user_id"=>$this->user->user_id
+        , "followed_user_id"=>$id);
+        $returned_id = DB::instance(DB_NAME)->insert('users_following', $users);
+
+        Router::redirect("/users/profileview/".$id."?updated=true");
 
     }
 
@@ -124,13 +116,15 @@ class users_controller extends base_controller {
         if ((isset($id))) { //if ID is null show the user their own profile
             $id = DB::instance(DB_NAME)->sanitize($id);
         } else {
-            $id = $this->user->user_id;
+            router::redirect("/users/profileedit");
         }
 
-        $current_user = siteutils::getuserprofile($id);
-
+        $currentuser = siteutils::getuserprofile($id);
         $this->template->content = View::instance('v_profile_view');
-        $this->template->content->current_user = $current_user;
+        $this->template->content->currentuser = $currentuser;
+
+        $this->template->content->following = true;
+
         echo $this->template;
 
     }

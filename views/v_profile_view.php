@@ -8,18 +8,24 @@
  */
 ?>
 
+<?php if (isset($_GET["updated"])) { ?>
+    <div class="alerttext">You're now following this user!</div>
+<?php } elseif($following) {?>
+    <div class="alerttext">You're following this user!</div>
+<?php } ?>
 
-<form method='POST' action='/users/p_profilefollow/<?php echo $current_user["user_id"] ?>'>
+<form method='POST' action='/users/p_profilefollow/<?php echo $currentuser["user_id"] ?>'>
     <fieldset>
         <legend>Boater Profile</legend>
-        <p>Name: <?php echo $current_user["first_name"]; ?> <?php echo $current_user["last_name"] ?></p>
-        <p>Email: <?php echo $current_user["email"]; ?></p>
-        <p>Location: <?php echo $current_user["location"]; ?></p>
-        <p>Description: <?php echo $current_user["profile_text"]; ?></p>
-        <p>Profile picture: <img src='/imageview.php?ID=<?php echo $current_user["user_id"] ?>' style='height:100px;width:100px' alt='profile picture'/></p>
+        <p>Name: <?php echo $currentuser["first_name"]; ?> <?php echo $currentuser["last_name"] ?></p>
+        <p>Email: <?php echo $currentuser["email"]; ?></p>
+        <p>Location: <?php echo $currentuser["location"]; ?></p>
+        <p>Description: <?php echo $currentuser["profile_text"]; ?></p>
+        <p>Profile picture: <img src='/uploads/avatars/<?php echo $currentuser["avatar"] ?>' style='height:200px;width:200px' alt='profile picture'/></p>
     </fieldset>
 
-
-    <input type='submit' value='Follow!'>
+    <?php if(!$following) {//hide the follow button if we're following?>
+        <input type='submit' value='Follow!'>
+    <?php } ?>
 
 </form>

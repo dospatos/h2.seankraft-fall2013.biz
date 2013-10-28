@@ -72,6 +72,7 @@ class posts_controller extends base_controller {
 
         # Save the post for the user
         $_POST['user_id'] = $this->user->user_id;
+        $_POST['created'] = Time::now();
 
         $returned_id = DB::instance(DB_NAME)->insert('posts', $_POST);
 

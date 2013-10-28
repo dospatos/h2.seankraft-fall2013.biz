@@ -17,8 +17,10 @@
     ?>
 
             <div>
-                <img src='/uploads/avatars/<?php echo $currentuser["user_id"] ?>_200_200.png' style='height:50px;width:50px' alt='profile picture'/>
-                <a href="/users/profileview/<?php echo $currentuser['user_id'] ?>"><?php echo $currentuser['first_name'].' '.$currentuser['last_name'] ?></a></div>
+                <img src='/uploads/avatars/<?php echo $currentuser["avatar"] ?>' style='height:50px;width:50px' alt='profile picture'/>
+                <a href="/users/profileview/<?php echo $currentuser['user_id'] ?>"><?php echo $currentuser['first_name'].' '.$currentuser['last_name'] ?></a>
+                <?php if(isset($currentuser["following_user_id"])){echo " - following";} ?>
+            </div>
         <?php }} ?>
 <?php } else { //This block displays the public option ?>
     <h2>To view other users and to post you must have an account!</h2>

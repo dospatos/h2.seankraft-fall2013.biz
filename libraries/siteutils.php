@@ -24,11 +24,21 @@ class siteutils {
     }
 
     public static function getuserprofile($id) {
-        $q = "SELECT user_id, first_name, last_name, email, location, profile_text, profile_pic
+        $q = "SELECT user_id, first_name, last_name, email, location, profile_text, avatar
         FROM users
         WHERE user_id  = " . $id;
 
         return DB::instance(DB_NAME)->select_row($q);
+    }
+
+    public static function isuserbeingfollowed($followed_user_id, $user_id) {
+        //figure out if we're already following the user
+        $q = "SELECT 'Y' AS following FROM users_following WHERE followed_user_id=".$followed_user_id." AND user_id=".$user_id;
+        $following = DB::instance(DB_NAME)->select_field($q);
+        if ($following) {
+            return true;
+        }
+        return false;
     }
 }
 
