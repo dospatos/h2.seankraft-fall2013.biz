@@ -17,10 +17,10 @@
 <form method='POST' action='/users/p_profilefollow/<?php echo $currentuser["user_id"] ?>'>
     <fieldset>
         <legend>Boater Profile</legend>
-        <p>Name: <?php echo $currentuser["first_name"]; ?> <?php echo $currentuser["last_name"] ?></p>
-        <p>Email: <?php echo $currentuser["email"]; ?></p>
-        <p>Location: <?php echo $currentuser["location"]; ?></p>
-        <p>Description: <?php echo $currentuser["profile_text"]; ?></p>
+        <p>Name: <?php echo stripslashes($currentuser["first_name"]); ?> <?php echo stripslashes($currentuser["last_name"]) ?></p>
+        <p>Email: <?php echo stripslashes($currentuser["email"]); ?></p>
+        <p>Location: <?php echo stripslashes($currentuser["location"]); ?></p>
+        <p>Description: <?php echo stripslashes($currentuser["profile_text"]); ?></p>
         <p>Profile picture: <img src='/uploads/avatars/<?php echo $currentuser["avatar"] ?>' style='height:200px;width:200px' alt='profile picture'/></p>
     </fieldset>
 

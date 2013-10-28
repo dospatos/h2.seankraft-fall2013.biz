@@ -14,29 +14,29 @@
 
 <form method='POST' action='/users/p_profileedit/<?php echo $currentuser["user_id"] ?>' enctype="multipart/form-data">
     <fieldset>
-        <legend>Edit Profile: <?php echo $currentuser["first_name"] + $currentuser{"last_name"} ?></legend>
+        <legend>Edit Profile: <?php echo $currentuser["first_name"] + stripslashes($currentuser{"last_name"}) ?></legend>
 
         <p>First Name<br>
-            <input type='text' name='first_name' value='<?php echo $currentuser["first_name"] ?>'>
+            <input type='text' name='first_name' value='<?php echo stripslashes($currentuser["first_name"]) ?>'>
         </p>
 
         <p>
             Last Name<br>
-            <input type='text' name='last_name' value='<?php echo $currentuser["last_name"]; ?>'>
+            <input type='text' name='last_name' value='<?php echo stripslashes($currentuser["last_name"]); ?>'>
         </p>
         <p>
             Email<br>
-            <input type='text' name='email' value='<?php echo $currentuser["email"]; ?>'>
+            <input type='text' name='email' value='<?php echo stripslashes($currentuser["email"]); ?>'>
             <br>
         </p>
         <p>
             Location<br/>
-            <input type='text' name='location' value='<?php echo $currentuser["location"]; ?>'
+            <input type='text' name='location' value='<?php echo stripslashes($currentuser["location"]); ?>'
         </p>
         <br>
         <p>
             Describe what's important about yourself...<br/>
-            <textarea cols='40' row='10' name='profile_text'><?php echo $currentuser["profile_text"]; ?></textarea>
+            <textarea cols='40' row='10' name='profile_text'><?php echo stripslashes($currentuser["profile_text"]); ?></textarea>
         </p>
         <br/>
         <p>

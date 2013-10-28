@@ -19,5 +19,5 @@
 
 <p>Your most recent posts</p>
 <?php foreach($posts_list AS $currentpost) { ?>
-        <div class='postframe'><?php echo $currentpost['post_text'] ?></div>
+        <div class='postframe'><?php echo stripslashes($currentpost['post_text']); ?></div>
 <?php } ?>

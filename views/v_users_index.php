@@ -17,9 +17,11 @@
     ?>
 
             <div>
-                <img src='/uploads/avatars/<?php echo $currentuser["avatar"] ?>' style='height:50px;width:50px' alt='profile picture'/>
-                <a href="/users/profileview/<?php echo $currentuser['user_id'] ?>"><?php echo $currentuser['first_name'].' '.$currentuser['last_name'] ?></a>
-                <?php if(isset($currentuser["following_user_id"])){echo " - following";} ?>
+                <a href="/users/profileview/<?php echo $currentuser['user_id'] ?>">
+                    <img src='/uploads/avatars/<?php echo $currentuser["avatar"] ?>' style='height:50px;width:50px' alt='profile picture'/>
+                    <?php echo $currentuser['first_name'].' '.$currentuser['last_name'] ?>
+                </a>
+                <?php if($currentuser["following_user_id"] == $user->user_id){echo "<img src='/images/following.png' style='width:20;height:20;' title='following'/>";} ?>
             </div>
         <?php }} ?>
 <?php } else { //This block displays the public option ?>

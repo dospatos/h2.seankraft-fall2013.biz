@@ -25,7 +25,7 @@ class users_controller extends base_controller {
         //if a user is active get a list of all the users
         if (isset($this->user)) {
             $q = "SELECT U.user_id, U.first_name, U.last_name, U.email, U.avatar, UF.user_id AS following_user_id
-            FROM users U LEFT JOIN users_following UF ON UF.user_id = ".$this->user->user_id;
+            FROM users U LEFT JOIN users_following UF ON UF.followed_user_id = U.user_id AND UF.user_id = ".$this->user->user_id;
 
             $users = DB::instance(DB_NAME)->select_rows($q);
             $this->template->content->users_list = $users;
@@ -123,7 +123,7 @@ class users_controller extends base_controller {
         $this->template->content = View::instance('v_profile_view');
         $this->template->content->currentuser = $currentuser;
 
-        $this->template->content->following = true;
+        $this->template->content->following = siteutils::isuserbeingfollowed($id, $this->user->user_id);
 
         echo $this->template;
 
