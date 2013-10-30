@@ -19,7 +19,7 @@ class rivers_controller extends base_controller {
         # First, set the content of the template with a view file
         $this->template->content = View::instance('v_rivers_index');
 
-        $q = "SELECT  river_id, river_name, descr
+        $q = "SELECT  river_id, river_name, river_class, descr, gps_coordinates_putin, gps_coordinates_takeout, aw_river_id
         FROM rivers ORDER BY river_name ASC";
         $rivers = DB::instance(DB_NAME)->select_rows($q);
         $this->template->content->river_list = $rivers;
@@ -36,7 +36,7 @@ class rivers_controller extends base_controller {
         # First, set the content of the template with a view file
         $this->template->content = View::instance('v_river_edit');
 
-        $q = "SELECT  river_id, river_name, descr
+        $q = "SELECT  river_id, river_name, river_class, descr, gps_coordinates_putin, gps_coordinates_takeout, aw_river_id
         FROM rivers WHERE river_id=".$id;
         $river = DB::instance(DB_NAME)->select_row($q);
         $this->template->content->currentriver = $river;
@@ -49,25 +49,21 @@ class rivers_controller extends base_controller {
 
     }
 
-    public function p_riversave () {
+    public function p_riversave ($id) {
         # Sanitize the user entered data to prevent any funny-business (re: SQL Injection Attacks)
         $_POST = DB::instance(DB_NAME)->sanitize($_POST);
         $_POST = siteutils::clean_html($_POST);
 
-        //use a regular expression to parse out any of the #rivernames and save them if they're unique
-        $post_text = $_POST["post_text"];
-        $tags = siteutils::saveriverhashtags($post_text);
+        # Save the river
+        $_POST['modified'] = Time::now();
+        $_POST['river_id'] = $id;
 
-        # Save the post for the user
-        $_POST['user_id'] = $this->user->user_id;
-        $_POST['created'] = Time::now();
-
-        $returned_id = DB::instance(DB_NAME)->insert('posts', $_POST);
+        $returned_id = DB::instance(DB_NAME)->update('rivers', $_POST, " WHERE river_id = ".$id);
 
         if(!$returned_id) {
 
         } else {
-            Router::redirect("/posts?updated=true");
+            Router::redirect("/rivers/edit/".$id."?updated=true");
         }
 
     }

@@ -21,7 +21,7 @@
 <?php foreach($my_posts_list AS $currentpost) { ?>
         <div class='postframe'>
             <?php
-            $post_text = siteutils::linkriverhashtags($currentpost['post_text']);
+            $post_text = siteutils::linkriverhashtags(stripslashes($currentpost['post_text']));
             echo $post_text;
             ?>
         </div>
@@ -33,7 +33,7 @@
     <div class='postframe'>
         <?php
             echo '<span style="color:red">'.stripslashes($currentpost['first_name']).' '.stripslashes($currentpost['last_name'].':</span> ');
-            $post_text = siteutils::linkriverhashtags($currentpost['post_text']);
+            $post_text = siteutils::linkriverhashtags(stripslashes($currentpost['post_text']));
             echo $post_text;
 
         ?>
