@@ -6,10 +6,9 @@
  * Time: 7:59 AM
  * To change this template use File | Settings | File Templates.
  */
-
 ?>
-
-<div>Current Users (click name to follow):</div>
+<h2>Other Users</h2>
+<div>Click name to see profile and follow:</div>
 <?php if($user) { //this block displays the options for the logged-inn user?>
     <!--List of users to follow-->
     <?php foreach($users_list AS $currentuser) {
@@ -21,7 +20,7 @@
                     <img src='/uploads/avatars/<?php echo $currentuser["avatar"] ?>' style='height:50px;width:50px' alt='profile picture'/>
                     <?php echo $currentuser['first_name'].' '.$currentuser['last_name'] ?>
                 </a>
-                <?php if($currentuser["following_user_id"] == $user->user_id){echo "<img src='/images/following.png' style='width:20;height:20;' title='following'/>";} ?>
+                <?php if($currentuser["following_user_id"] == $user->user_id){echo "<img src='/images/following.png' style='width:20;height:20;' title='following - click to stop'/>";} ?>
             </div>
         <?php }} ?>
 <?php } else { //This block displays the public option ?>

@@ -8,6 +8,17 @@ CREATE TABLE posts (
   INDEX posts_FKIndex1(user_id)
 );
 
+CREATE TABLE rivers (
+  river_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  river_name VARCHAR(100) NULL,
+  descr VARCHAR(100) NULL,
+  gps_coordinates VARCHAR(50) NULL,
+  created INT NULL,
+  modified INT NULL,
+  aw_river_id VARCHAR(50) NULL,
+  PRIMARY KEY(river_id)
+);
+
 CREATE TABLE users (
   user_id INT NOT NULL AUTO_INCREMENT,
   created INT NULL,
@@ -25,10 +36,11 @@ CREATE TABLE users (
   PRIMARY KEY(user_id)
 );
 
-CREATE TABLE users_following (
+CREATE TABLE users_users (
   user_id INT NOT NULL,
-  followed_user_id INT NOT NULL,
-  PRIMARY KEY(user_id, followed_user_id),
+  user_id_followed INT NOT NULL,
+  created INT NULL,
+  PRIMARY KEY(user_id, user_id_followed),
   INDEX users_following_FKIndex1(user_id)
 );
 

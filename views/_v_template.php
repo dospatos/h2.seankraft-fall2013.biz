@@ -20,8 +20,9 @@
     <!-- Menu for users who are logged in -->
     <?php if($user): ?>
         <a href='/posts'>Posts</a> |
-        <a href='/users/logout'>Logout</a> |
-        <a href='/users/profileedit/<?php echo $user->user_id?>'>Profile</a>
+        <a href='/users/profileedit/<?php echo $user->user_id?>'>You</a> |
+        <a href="/users">Others |
+        <a href='/users/logout'>Logout</a>
 
         <!-- Menu options for users who are not logged in -->
     <?php else: ?>

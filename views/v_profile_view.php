@@ -24,8 +24,7 @@
         <p>Profile picture: <img src='/uploads/avatars/<?php echo $currentuser["avatar"] ?>' style='height:200px;width:200px' alt='profile picture'/></p>
     </fieldset>
 
-    <?php if(!$following) {//hide the follow button if we're following?>
-        <input type='submit' value='Follow!'>
-    <?php } ?>
+
+    <input type='submit' value='<?php echo $following ? "Stop Following!" : "Follow!"; ?>'>
 
 </form>

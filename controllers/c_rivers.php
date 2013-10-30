@@ -1,6 +1,6 @@
 <?php
 
-class posts_controller extends base_controller {
+class rivers_controller extends base_controller {
 
     /*-------------------------------------------------------------------------------------------------
 
@@ -15,58 +15,41 @@ class posts_controller extends base_controller {
     Show a list of the latest posts
     -------------------------------------------------------------------------------------------------*/
     public function index() {
-
         # Any method that loads a view will commonly start with this
         # First, set the content of the template with a view file
-        $this->template->content = View::instance('v_posts_index');
+        $this->template->content = View::instance('v_rivers_index');
 
-        $q = "SELECT  post_id, post_text, user_id
-        FROM posts WHERE user_id=".$this->user->user_id." ORDER BY post_id DESC";
-        $posts = DB::instance(DB_NAME)->select_rows($q);
-        $this->template->content->my_posts_list = $posts;
-
-        $q = "SELECT  P.post_id, P.post_text, U.user_id, U.last_name, U.first_name
-        FROM posts P INNER JOIN users U ON U.user_id = P.user_id
-        WHERE P.user_id IN (SELECT user_id_followed FROM users_users WHERE user_id=".$this->user->user_id.") ORDER BY post_id DESC";
-        $followed_posts = DB::instance(DB_NAME)->select_rows($q);
-        $this->template->content->followed_posts_list = $followed_posts;
+        $q = "SELECT  river_id, river_name, descr
+        FROM rivers ORDER BY river_name ASC";
+        $rivers = DB::instance(DB_NAME)->select_rows($q);
+        $this->template->content->river_list = $rivers;
 
         # Now set the <title> tag
-        $this->template->title = "Posts";
-
-        # CSS/JS includes
-        /*
-        $client_files_head = Array("");
-        $this->template->client_files_head = Utils::load_client_files($client_files);
-
-        $client_files_body = Array("");
-        $this->template->client_files_body = Utils::load_client_files($client_files_body);
-        */
+        $this->template->title = "Rivers";
 
         # Render the view
         echo $this->template;
     } # End of method
 
-    public function create() {
-        $this->template->content = View::instance('v_posts_create');
+    public function edit($id) {
+        # Any method that loads a view will commonly start with this
+        # First, set the content of the template with a view file
+        $this->template->content = View::instance('v_river_edit');
+
+        $q = "SELECT  river_id, river_name, descr
+        FROM rivers WHERE river_id=".$id;
+        $river = DB::instance(DB_NAME)->select_row($q);
+        $this->template->content->currentriver = $river;
 
         # Now set the <title> tag
-        $this->template->title = "Posts";
-
-        # CSS/JS includes
-        /*
-        $client_files_head = Array("");
-        $this->template->client_files_head = Utils::load_client_files($client_files);
-
-        $client_files_body = Array("");
-        $this->template->client_files_body = Utils::load_client_files($client_files_body);
-        */
+        $this->template->title = "Rivers";
 
         # Render the view
         echo $this->template;
+
     }
 
-    public function p_postsave () {
+    public function p_riversave () {
         # Sanitize the user entered data to prevent any funny-business (re: SQL Injection Attacks)
         $_POST = DB::instance(DB_NAME)->sanitize($_POST);
         $_POST = siteutils::clean_html($_POST);

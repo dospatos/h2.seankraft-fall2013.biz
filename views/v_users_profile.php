@@ -8,13 +8,14 @@
  */
 ?>
 
+<h2>Edit Your Profile</h2>
 <?php if (isset($_GET["updated"])) { ?>
     <div class="alerttext">Profile was updated!</div>
 <?php }?>
 
 <form method='POST' action='/users/p_profileedit/<?php echo $currentuser["user_id"] ?>' enctype="multipart/form-data">
     <fieldset>
-        <legend>Edit Profile: <?php echo $currentuser["first_name"] + stripslashes($currentuser{"last_name"}) ?></legend>
+        <legend>Profile</legend>
 
         <p>First Name<br>
             <input type='text' name='first_name' value='<?php echo stripslashes($currentuser["first_name"]) ?>'>
