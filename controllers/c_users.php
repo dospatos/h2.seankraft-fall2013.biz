@@ -24,7 +24,7 @@ class users_controller extends base_controller {
         //if a user is active get a list of all the users
         if (isset($this->user)) {
             $q = "SELECT U.user_id, U.first_name, U.last_name, U.email, U.avatar, UF.user_id AS following_user_id
-            FROM users U LEFT JOIN users_users UF ON UF.user_id_followed = U.user_id AND UF.user_id = ".$this->user->user_id;
+            FROM users U LEFT JOIN users_users UF ON UF.user_id_followed = U.user_id AND UF.user_id = ".$this->user->user_id." WHERE U.user_id <> ".$this->user->user_id;
 
             $users = DB::instance(DB_NAME)->select_rows($q);
             $this->template->content->users_list = $users;
@@ -100,9 +100,6 @@ class users_controller extends base_controller {
             DB::instance(DB_NAME)->delete('users_users', 'WHERE user_id='.$this->user->user_id.' AND user_id_followed='.$id);
             Router::redirect("/users/profileview/".$id);
         }
-
-
-
     }
 
     /*

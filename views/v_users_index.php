@@ -11,9 +11,7 @@
 <div>Click name to see profile and follow:</div>
 <?php if($user) { //this block displays the options for the logged-inn user?>
     <!--List of users to follow-->
-    <?php foreach($users_list AS $currentuser) {
-        if ($user->user_id != $currentuser["user_id"]) {
-    ?>
+    <?php foreach($users_list AS $currentuser) { ?>
 
             <div>
                 <a href="/users/profileview/<?php echo $currentuser['user_id'] ?>">
@@ -22,7 +20,7 @@
                 </a>
                 <?php if($currentuser["following_user_id"] == $user->user_id){echo "<img src='/images/following.png' style='width:20;height:20;' title='following - click to stop'/>";} ?>
             </div>
-        <?php }} ?>
+        <?php } ?>
 <?php } else { //This block displays the public option ?>
     <h2>To view other users and to post you must have an account!</h2>
 <?php } ?>
