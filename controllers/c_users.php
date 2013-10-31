@@ -18,7 +18,6 @@ class users_controller extends base_controller {
         # First, set the content of the template with a view file
         $this->template->content = View::instance('v_users_index');
 
-
         # Now set the <title> tag
         $this->template->title = "Users";
 
@@ -30,16 +29,6 @@ class users_controller extends base_controller {
             $users = DB::instance(DB_NAME)->select_rows($q);
             $this->template->content->users_list = $users;
         }
-
-
-        # CSS/JS includes
-        /*
-        $client_files_head = Array("");
-        $this->template->client_files_head = Utils::load_client_files($client_files);
-
-        $client_files_body = Array("");
-        $this->template->client_files_body = Utils::load_client_files($client_files_body);
-        */
 
         # Render the view
         echo $this->template;
@@ -78,10 +67,6 @@ class users_controller extends base_controller {
                 $img->open_image($avatar_file_name);
                 $img->resize(600, 600, "crop");
                 $img->save_image($avatar_file_name);
-                $img->resize(200, 200, "auto");//no need to crop
-                $file_parts  = pathinfo($avatar_file_name);
-                $thumbnail_file = getcwd().$upload_dir.$id. "_200_200." . $file_parts['extension'];
-                $img->save_image($thumbnail_file);
                 $_POST["avatar"] = $avatar_file_name;
             }
         }
@@ -99,6 +84,8 @@ class users_controller extends base_controller {
 
     }
 
+    /* Sets the logged in user to following the chosen user
+     */
     public function p_profilefollow($id) {
         //the logged in user should follow the user of $id
 
@@ -118,6 +105,9 @@ class users_controller extends base_controller {
 
     }
 
+    /*
+     * Provide a read only view of the profile
+     */
     public function profileview($id = null) {
 
         if ((isset($id))) { //if ID is null show the user their own profile
@@ -136,6 +126,9 @@ class users_controller extends base_controller {
 
     }
 
+    /*
+     * Let the user login
+     */
     public function login($error = NULL , $new_user = false) {
         # Setup view
         $this->template->content = View::instance('v_users_login');
@@ -146,6 +139,9 @@ class users_controller extends base_controller {
         echo $this->template;
     }
 
+    /*
+     * Do the login for the user, update the last_login
+     */
     public function p_login() {
 
         # Sanitize the user entered data to prevent any funny-business (re: SQL Injection Attacks)
@@ -156,12 +152,13 @@ class users_controller extends base_controller {
 
         # Search the db for this email and password
         # Retrieve the token if it's available
-        $q = "SELECT token
+        $q = "SELECT token, user_id
         FROM users
         WHERE email = '".$_POST['email']."'
         AND password = '".$_POST['password']."'";
 
-        $token = DB::instance(DB_NAME)->select_field($q);
+        $return_row = DB::instance(DB_NAME)->select_row($q);
+        $token = $return_row["token"];
 
         # If we didn't get a token back, it means login failed
         if(!$token) {
@@ -171,54 +168,76 @@ class users_controller extends base_controller {
 
 
         } else {# But if we did, login succeeded!
+            //update the user's last login
+            $user_id = $return_row["user_id"];
+            $user_update = Array("user_id"=>$user_id, "last_login"=>Time::Now());
+            DB::instance(DB_NAME)->update("users", $user_update, "WHERE user_id = ".$user_id);
 
             //Store this token in a cookie using setcookie()
             setcookie("token", $token, strtotime('+1 year'), '/');
 
-            # Send them to the main page - or whever you want them to go
+            # Send them to the main page
             Router::redirect("/");
 
         }
 
     }
 
-    public function signup() {
+    /*
+     * Allow a user to signup for the site
+     */
+    public function signup($duplicate_username = false) {
         # Setup view
         $this->template->content = View::instance('v_users_signup');
         $this->template->title   = "Sign Up";
+        $this->template->content->duplicate_username = $duplicate_username;
+        if ($duplicate_username) {
+            $this->template->content->first_name = $_POST["first_name"];
+            $this->template->content->last_name = $_POST["last_name"];
+            $this->template->content->email = $_POST["email"];
+        }
 
         # Render template
         echo $this->template;
     }
 
     public function p_signup() {
+        $_POST = DB::instance(DB_NAME)->sanitize($_POST);
 
-        # More data we want stored with the user
-        $_POST['created']  = Time::now();
-        $_POST['modified'] = Time::now();
+        //Find out if the email is already taken because this is the username
+        $q = "SELECT user_id FROM users WHERE email = '".str_replace(" ","", $_POST["email"])."'";
+        $existing_user_id = DB::instance(DB_NAME)->select_field($q);
 
-        # Encrypt the password
-        $_POST['password'] = sha1(PASSWORD_SALT.$_POST['password']);
+        if (!$existing_user_id) {
+            # More data we want stored with the user
+            $_POST['created']  = Time::now();
+            $_POST['modified'] = Time::now();
 
-        # Create an encrypted token via their email address and a random string
-        $token = sha1(TOKEN_SALT.$_POST['email'].Utils::generate_random_string());
-        $_POST['token'] = $token;
+            # Encrypt the password
+            $_POST['password'] = sha1(PASSWORD_SALT.$_POST['password']);
 
-        # Insert this user into the database
-        $user_id = DB::instance(DB_NAME)->insert('users', $_POST);
-        //Store this token in a cookie now so that they appear as logged in, also so we can create the user to create the avatar
-        setcookie("token", $token, strtotime('+1 year'), '/');
-        $newuser = new User();
-        $newuser->authenticate();
-        print("<pre>");
-        print_r($newuser);
-        print("</pre>");
+            # Create an encrypted token via their email address and a random string
+            $token = sha1(TOKEN_SALT.$_POST['email'].Utils::generate_random_string());
+            $_POST['token'] = $token;
 
-        $newuser->create_initial_avatar($user_id);
+            # Insert this user into the database
+            $user_id = DB::instance(DB_NAME)->insert('users', $_POST);
+            //Store this token in a cookie now so that they appear as logged in, also so we can create the user to create the avatar
+            setcookie("token", $token, strtotime('+1 year'), '/');
+            $newuser = new User();
+            $newuser->authenticate();
+            print("<pre>");
+            print_r($newuser);
+            print("</pre>");
 
-        # For now, just confirm they've signed up -
-        # You should eventually make a proper View for this
-        Router::redirect("/users/");
+            $newuser->create_initial_avatar($user_id);
+
+            # For now, just confirm they've signed up -
+            # You should eventually make a proper View for this
+            Router::redirect("/users/");
+        } else {
+            $this->signup(true);
+        }
     }
 
     public function logout() {

@@ -17,6 +17,7 @@
         </p>
         <ul>
             <li>Hashtags mean rivers and creeks on this site, use underscore for spaces - as in #Beerkill_Creek</li>
+            <li>Tags will be automatically linked to river information</li>
         </ul>
         <input type="submit" value="Post"/>
     </form>

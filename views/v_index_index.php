@@ -10,7 +10,7 @@
     <ul>
         <li>Support for user profiles</li>
         <li>Users can upload avatars</li>
-        <li>Hashtags to identify rivers used in posts</li>
+        <li>Hashtags to identify rivers refered to in posts</li>
     </ul>
 
 </p>
