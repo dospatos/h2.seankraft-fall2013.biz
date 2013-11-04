@@ -24,7 +24,7 @@ CREATE TABLE users (
   created INT NULL,
   modified INT NULL,
   token VARCHAR(255) NULL,
-  [password] VARCHAR(255) NULL,
+  password VARCHAR(255) NULL,
   last_login INT NULL,
   time_zone VARCHAR(255) NULL,
   first_name VARCHAR(255) NULL,
