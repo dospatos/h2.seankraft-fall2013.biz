@@ -56,6 +56,12 @@ class users_controller extends base_controller {
      */
     public function p_profileedit($id) {
 
+        if (!$this->user->user_id == $id) { //users can only edit their own profile
+            $id = DB::instance(DB_NAME)->sanitize($id);
+        } else {
+            $id = $this->user->user_id;
+        }
+
         //see if there is an image to update
         $avatar_file_name = null;
         if (isset($_FILES['profile_pic']) && $_FILES['profile_pic']['size'] > 0) {
@@ -86,7 +92,7 @@ class users_controller extends base_controller {
 
     /* Sets the logged in user to following the chosen user
      */
-    public function p_profilefollow($id) {
+    public function p_profilefollow($id, $returntousers=false) {
         //the logged in user should follow the user of $id
 
         # update the database
@@ -95,9 +101,13 @@ class users_controller extends base_controller {
         //if the user is not being followed, add the record
         if (!siteutils::isuserbeingfollowed($id, $this->user->user_id)) {
             DB::instance(DB_NAME)->insert('users_users', $users);
-            Router::redirect("/users/profileview/".$id."?updated=true");
         } else {//otherwise remove the record
             DB::instance(DB_NAME)->delete('users_users', 'WHERE user_id='.$this->user->user_id.' AND user_id_followed='.$id);
+        }
+
+        if ($returntousers) {
+            Router::redirect("/users");
+        }else {
             Router::redirect("/users/profileview/".$id);
         }
     }

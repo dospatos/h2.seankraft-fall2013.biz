@@ -8,9 +8,7 @@
  */
 ?>
 
-<?php if (isset($_GET["updated"])) { ?>
-    <div class="alerttext">You're now following this user!</div>
-<?php } elseif($following) {?>
+<?php if($following) {?>
     <div class="alerttext">You're following this user!</div>
 <?php } ?>
 

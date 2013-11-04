@@ -1,15 +1,14 @@
 <h2>Welcome to <?=APP_NAME?><?php if($user) echo ', '.$user->first_name; ?></h2>
 
-<p>
-    The site to help whitewater boaters connect and find out the only thing there is to know.
+    <p>
+        The site to help whitewater boaters connect and find out what's running and who's running it!
+    </p>
 
     <br/>
-    <p>What's running and who's running it?</p>
     <img src='/images/banner.png' alt='whitewater on the Beerkill' title='Jeff Piche on the Beerkill Creek'/>
-    <h3>This site features</h3>
+    <h3>This site has +1 features</h3>
     <ul>
-        <li>Support for user profiles</li>
-        <li>Users can upload avatars</li>
+        <li>Support for user profiles & avatars</li>
         <li>Hashtags to identify rivers refered to in posts</li>
     </ul>
 

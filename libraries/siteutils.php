@@ -76,11 +76,11 @@ class siteutils {
                 $search_tag =  str_ireplace("#", "", $tag);
                 $q = "SELECT river_id FROM rivers WHERE river_name='".$search_tag."'";
                 $river_id = DB::instance(DB_NAME)->select_field($q);
+                if (isset($river_id)) {
+                    $link_text = "<a href='/rivers/edit/".$river_id."'>".$tag."</a>";
 
-                $link_text = "<a href='/rivers/edit/".$river_id."'>".$tag."</a>";
-
-                $post_text = str_replace($tag,$link_text,$post_text);
-
+                    $post_text = str_replace($tag,$link_text,$post_text);
+                }
             }
         }
         return $post_text;

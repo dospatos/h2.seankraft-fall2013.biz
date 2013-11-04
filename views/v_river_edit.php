@@ -32,16 +32,15 @@
             <input type='text' name='gps_coordinates_takeout' value='<?php echo stripslashes($currentriver["gps_coordinates_takeout"]) ?>'>
         </p>
         <p>
-            <?php if (isset($currentriver["gps_coordinates_putin"]) && isset($currentriver["gps_coordinates_putin"])) { //show the link if we have it?>
+            <?php if ($currentriver["gps_coordinates_putin"] != "" && $currentriver["gps_coordinates_putin"] != "") { //show the link if we have it?>
                 <iframe width="425" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
                         src="https://maps.google.com/maps?f=d&amp;source=s_d&amp;saddr=<?php echo $currentriver["gps_coordinates_putin"] ?>&amp;daddr=<?php echo $currentriver["gps_coordinates_takeout"] ?>&amp;num=1&amp;t=h&amp;gl=us&amp;ie=UTF8&amp;z=12&amp;iwloc=near&amp;output=embed"></iframe>
                         <br /><small><a target="_new" href="https://maps.google.com/maps?f=d&amp;source=s_d&amp;saddr=<?php echo $currentriver["gps_coordinates_putin"] ?>&amp;daddr=<?php echo $currentriver["gps_coordinates_takeout"] ?>&amp;num=1&amp;t=h&amp;gl=us&amp;ie=UTF8&amp;z=12&amp;iwloc=near&amp;output=embed" style="color:#0000FF;text-align:left">View Larger Map</a></small>
             <?php } ?>
         </p>
-        <!--https://maps.google.com/?saddr=41.511901,-73.949179&daddr=41.506283,-73.955949-->
         <p>American Whitewater River ID<br>
             <input type='text' name='aw_river_id' value='<?php echo stripslashes($currentriver["aw_river_id"]) ?>'>
-            <?php if (isset($currentriver["aw_river_id"])) { //show the link if we have it?>
+            <?php if ($currentriver["aw_river_id"] != "") { //show the link if we have it?>
                 <a href='http://www.americanwhitewater.org/content/River/detail/id/<?php echo stripslashes($currentriver["aw_river_id"]) ?>' target="_new">View river on American Whitewater</a>
             <?php } ?>
         </p>
