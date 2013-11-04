@@ -8,11 +8,20 @@ CREATE TABLE posts (
   INDEX posts_FKIndex1(user_id)
 );
 
+CREATE TABLE posts_rivers (
+  river_id INTEGER UNSIGNED NOT NULL,
+  post_id INTEGER UNSIGNED NOT NULL,
+  PRIMARY KEY(river_id, post_id),
+  INDEX posts_rivers_FKIndex1(river_id)
+);
+
 CREATE TABLE rivers (
   river_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
   river_name VARCHAR(100) NULL,
+  river_class VARCHAR(10) NULL,
   descr VARCHAR(100) NULL,
-  gps_coordinates VARCHAR(50) NULL,
+  gps_coordinates_putin VARCHAR(50) NULL,
+  gps_coordinates_takeout VARCHAR(50) NULL,
   created INT NULL,
   modified INT NULL,
   aw_river_id VARCHAR(50) NULL,
@@ -24,7 +33,7 @@ CREATE TABLE users (
   created INT NULL,
   modified INT NULL,
   token VARCHAR(255) NULL,
-  password VARCHAR(255) NULL,
+  [password] VARCHAR(255) NULL,
   last_login INT NULL,
   time_zone VARCHAR(255) NULL,
   first_name VARCHAR(255) NULL,
