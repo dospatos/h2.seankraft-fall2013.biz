@@ -232,12 +232,10 @@ class users_controller extends base_controller {
             $user_id = DB::instance(DB_NAME)->insert('users', $_POST);
             //Store this token in a cookie now so that they appear as logged in, also so we can create the user to create the avatar
             setcookie("token", $token, strtotime('+1 year'), '/');
+
+            //wake up the user in order to create an avatar for them
             $newuser = new User();
             $newuser->authenticate();
-            print("<pre>");
-            print_r($newuser);
-            print("</pre>");
-
             $newuser->create_initial_avatar($user_id);
 
             # For now, just confirm they've signed up -
