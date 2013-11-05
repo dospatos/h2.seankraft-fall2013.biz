@@ -79,7 +79,7 @@ class siteutils {
     //look through the text and see if any tags match rivers we have in the database, update the text with links
     public static function linkriverhashtags($post_text) {
         preg_match_all("/(#\w+)/", $post_text, $matches);
-        $new_river_ids = "";
+
         if ($matches) {
             $hashtagsArray = array_count_values($matches[0]);
             $hashtags = array_keys($hashtagsArray);
