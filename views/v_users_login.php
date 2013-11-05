@@ -23,8 +23,8 @@
 
     <br><br>
     <?php if(isset($error)) { ?>
-        <div class='error'>
-            Login failed. Please double check your email and password. <br/>
+        <div class='alerttext'>
+            <?php echo str_replace("_", " ", $error)?>. Please double check your email and password. <br/>
 
             If you don't have an account, <a href="/users/signup">sign up here</a>
         </div>

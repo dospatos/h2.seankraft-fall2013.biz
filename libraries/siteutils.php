@@ -4,6 +4,8 @@ class siteutils {
     /*-------------------------------------------------------------------------------------------------
     Class contains any utils that need to be globally available
     -------------------------------------------------------------------------------------------------*/
+
+    //Remove HTML tags from text
     public static function clean_html($data) {
 
         if(is_array($data)){
@@ -23,6 +25,7 @@ class siteutils {
         return $data;
     }
 
+    //Get the data for the user
     public static function getuserprofile($id) {
         $q = "SELECT user_id, first_name, last_name, email, location, profile_text, avatar
         FROM users
@@ -31,6 +34,7 @@ class siteutils {
         return DB::instance(DB_NAME)->select_row($q);
     }
 
+    //returns true if the followed user is being followed by the other user
     public static function isuserbeingfollowed($followed_user_id, $user_id) {
         //figure out if we're already following the user
         $q = "SELECT 'Y' AS following FROM users_users WHERE user_id_followed=".$followed_user_id." AND user_id=".$user_id;
@@ -41,6 +45,14 @@ class siteutils {
         return false;
     }
 
+    //For use on pages that don't need all functions secured, and hence to not inherit secure_controller
+    public static function redirectnonloggedinuser($sessionuserobject) {
+        if (!$sessionuserobject) {
+            Router::redirect("/users/login/Not_logged_in");
+        }
+    }
+
+    //Look through a post and save any hash tags that we don't have already
     public static function saveriverhashtags($post_text) {
         preg_match_all("/(#\w+)/", $post_text, $matches);
         $hashtags = false;
@@ -64,6 +76,7 @@ class siteutils {
         return $matches;
     }
 
+    //look through the text and see if any tags match rivers we have in the database, update the text with links
     public static function linkriverhashtags($post_text) {
         preg_match_all("/(#\w+)/", $post_text, $matches);
         $new_river_ids = "";

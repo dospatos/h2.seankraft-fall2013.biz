@@ -36,7 +36,7 @@ class users_controller extends base_controller {
     } # End of method
 
     public function profileedit($id = null) {
-
+        siteutils::redirectnonloggedinuser($this->user);
         if ((isset($id)) && ($this->user->user_id == $id)) { //users can only edit their own profile
             $id = DB::instance(DB_NAME)->sanitize($id);
         } else {
@@ -55,7 +55,7 @@ class users_controller extends base_controller {
         1. users can only edit their own profile
      */
     public function p_profileedit($id) {
-
+        siteutils::redirectnonloggedinuser($this->user);
         if (!$this->user->user_id == $id) { //users can only edit their own profile
             $id = DB::instance(DB_NAME)->sanitize($id);
         } else {
@@ -94,6 +94,7 @@ class users_controller extends base_controller {
      */
     public function p_profilefollow($id, $returntousers=false) {
         //the logged in user should follow the user of $id
+        siteutils::redirectnonloggedinuser($this->user);
 
         # update the database
         $users = Array("user_id"=>$this->user->user_id
@@ -116,7 +117,7 @@ class users_controller extends base_controller {
      * Provide a read only view of the profile
      */
     public function profileview($id = null) {
-
+        siteutils::redirectnonloggedinuser($this->user);
         if ((isset($id))) { //if ID is null show the user their own profile
             $id = DB::instance(DB_NAME)->sanitize($id);
         } else {
@@ -171,7 +172,7 @@ class users_controller extends base_controller {
         if(!$token) {
 
             # Send them back to the login page
-            Router::redirect("/users/login/error");
+            Router::redirect("/users/login/Username_or_password_wrong");
 
 
         } else {# But if we did, login succeeded!
@@ -248,7 +249,7 @@ class users_controller extends base_controller {
     }
 
     public function logout() {
-
+        siteutils::redirectnonloggedinuser($this->user);
         # Generate and save a new token for next login
         $new_token = sha1(TOKEN_SALT.$this->user->email.Utils::generate_random_string());
 

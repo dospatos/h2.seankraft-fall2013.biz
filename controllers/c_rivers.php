@@ -1,6 +1,6 @@
 <?php
 
-class rivers_controller extends base_controller {
+class rivers_controller extends secure_controller {
 
     /*-------------------------------------------------------------------------------------------------
 

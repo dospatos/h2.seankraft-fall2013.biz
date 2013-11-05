@@ -1,13 +1,13 @@
 <?php
 
-class posts_controller extends base_controller {
+class posts_controller extends secure_controller {
 
     /*-------------------------------------------------------------------------------------------------
 
     -------------------------------------------------------------------------------------------------*/
     public function __construct() {
         parent::__construct();
-        //put code here to restrict to logged in users
+
     }
 
     /*-------------------------------------------------------------------------------------------------
